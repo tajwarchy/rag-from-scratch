@@ -1,0 +1,52 @@
+# ── Python ───────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environments ──────────────────
+.env
+.venv
+env/
+venv/
+
+# ── Conda ────────────────────────────────
+# Don't commit the full env — environment.yml is enough
+conda-env/
+
+# ── Project-specific ─────────────────────
+# FAISS index and metadata (large binary files, rebuilt on demand)
+indexes/
+
+# PDF source documents (likely large and/or proprietary)
+data/pdfs/
+
+# Evaluation outputs and latency logs
+tests/results/
+*.log
+
+# ── Jupyter ──────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── macOS ────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── IDE ──────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Secrets ──────────────────────────────
+# In case you ever add an OpenAI key or similar
+.env
+*.env
+secrets.yaml

@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────
+# RAG from Scratch — central configuration
+# All tunable parameters live here.
+# No hardcoded values anywhere in the codebase.
+# ─────────────────────────────────────────
+
+# --- Paths ---
+paths:
+  pdf_dir: "data/pdfs"
+  index_dir: "indexes"
+  index_file: "indexes/faiss.index"
+  metadata_file: "indexes/metadata.json"
+
+# --- Chunking ---
+chunking:
+  default_strategy: "fixed"   # fixed | sentence | sliding
+  fixed:
+    chunk_size: 256            # tokens
+    overlap: 32               # tokens
+  sentence:
+    max_sentences: 5
+    overlap_sentences: 1
+  sliding:
+    window_size: 200           # tokens
+    step_size: 100            # tokens (50% overlap)
+
+# --- Embedding ---
+embedding:
+  model_name: "all-MiniLM-L6-v2"
+  batch_size: 32
+  num_workers: 0              # macOS multiprocessing constraint — keep at 0
+  device: "mps"              # M1 Apple Silicon GPU
+
+# --- FAISS ---
+faiss:
+  index_type: "flat"          # flat | ivf (ivf needs training, use flat for <100k chunks)
+  metric: "l2"
+  top_k: 5                   # default number of chunks to retrieve
+
+# --- LLM ---
+llm:
+  provider: "ollama"          # ollama | openai (swap here + in llm_service.py)
+  model_name: "mistral"
+  base_url: "http://localhost:11434"
+  temperature: 0.1            # low temp = more grounded answers
+  max_tokens: 512
+
+# --- Cache ---
+cache:
+  enabled: true
+  # In-memory dict simulating Redis. Key = hash of query string.
+  # To upgrade: replace the dict with redis-py and point at a Redis instance.
+  max_size: 1000              # evict oldest entries after this many cached queries
+
+# --- API ---
+api:
+  host: "0.0.0.0"
+  port: 8000
+  log_level: "info"
+
+# --- Evaluation ---
+eval:
+  recall_k: 5                 # recall@k for chunking strategy benchmarks
+  load_test_queries: 50       # number of queries for latency simulation

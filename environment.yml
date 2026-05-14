@@ -1,0 +1,19 @@
+name: rag-scratch
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - sentence-transformers==3.0.1
+      - faiss-cpu==1.8.0
+      - pymupdf==1.24.9
+      - fastapi==0.115.0
+      - uvicorn[standard]==0.30.6
+      - numpy==1.26.4
+      - tiktoken==0.7.0
+      - pyyaml==6.0.2
+      - httpx==0.27.2
+      - pydantic==2.8.2
