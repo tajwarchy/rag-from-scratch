@@ -1,6 +1,6 @@
 """
 Ingestion service — orchestrates the full pipeline:
-    PDF directory → extract → chunk → (embed + index in Phase 3)
+    PDF directory → extract → chunk → embed → FAISS index → disk
 
 System design note:
     This service is intentionally separate from query_service.py.
@@ -12,12 +12,12 @@ System design note:
     PDF collections. It should never block an HTTP thread.
 """
 
-import json
 import time
-from pathlib import Path
 
 from core.extractor import extract_text_from_dir
 from core.chunker import get_chunker
+from core.embedder import embed_chunks
+from core.faiss_store import build_index
 from core.config_loader import load_config
 
 # Shared state — written here, read by query_service and /health
@@ -37,12 +37,9 @@ def get_status() -> dict:
 
 def run_ingestion(pdf_dir: str, strategy: str) -> list[dict]:
     """
-    Full ingestion pipeline: extract → chunk.
-    Embedding and indexing are added in Phase 3.
+    Full ingestion pipeline: extract → chunk → embed → index → persist.
 
-    Returns the list of chunk dicts so the caller (or background task)
-    can hand them to the embedder.
-
+    Returns the list of chunk dicts.
     Updates _ingestion_status throughout so /health can report progress.
     """
     global _ingestion_status
@@ -68,14 +65,13 @@ def run_ingestion(pdf_dir: str, strategy: str) -> list[dict]:
         chunks = chunker(pages, cfg)
         print(f"[Ingestion] Created {len(chunks)} chunks")
 
-        # ── Step 3: Save chunk metadata to disk ──────────────────────────────
-        # Metadata is saved separately from the FAISS index so we can
-        # retrieve source_file, page, and text for each chunk_id at query time.
-        metadata_path = Path(cfg["paths"]["metadata_file"])
-        metadata_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(metadata_path, "w") as f:
-            json.dump(chunks, f, indent=2)
-        print(f"[Ingestion] Metadata saved to: {metadata_path}")
+        # ── Step 3: Embed ────────────────────────────────────────────────────
+        print(f"[Ingestion] Embedding chunks...")
+        embeddings = embed_chunks(chunks)
+
+        # ── Step 4: Build & persist FAISS index ─────────────────────────────
+        print(f"[Ingestion] Building FAISS index...")
+        build_index(embeddings, chunks)
 
         elapsed = round(time.time() - t_start, 2)
         _ingestion_status.update({
@@ -83,7 +79,7 @@ def run_ingestion(pdf_dir: str, strategy: str) -> list[dict]:
             "chunk_count":      len(chunks),
             "last_run_seconds": elapsed,
         })
-        print(f"[Ingestion] Done in {elapsed}s — {len(chunks)} chunks ready for embedding")
+        print(f"[Ingestion] Pipeline complete in {elapsed}s")
 
         return chunks
 
