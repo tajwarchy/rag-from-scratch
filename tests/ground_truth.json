@@ -1,0 +1,77 @@
+[
+  {
+    "question": "What is the model architecture used in Attention Is All You Need?",
+    "expected_chunks": ["encoder", "decoder", "self-attention"],
+    "source": "attention_is_all_you_need.pdf"
+  },
+  {
+    "question": "How many attention heads are used in the Transformer base model?",
+    "expected_chunks": ["8", "multi-head"],
+    "source": "attention_is_all_you_need.pdf"
+  },
+  {
+    "question": "What optimizer was used to train the Transformer?",
+    "expected_chunks": ["Adam", "optimizer"],
+    "source": "attention_is_all_you_need.pdf"
+  },
+  {
+    "question": "What is positional encoding in the Transformer?",
+    "expected_chunks": ["positional", "sine", "cosine"],
+    "source": "attention_is_all_you_need.pdf"
+  },
+  {
+    "question": "What does BERT stand for?",
+    "expected_chunks": ["Bidirectional", "Encoder", "Representations", "Transformers"],
+    "source": "bert.pdf"
+  },
+  {
+    "question": "What are the two tasks used to pre-train BERT?",
+    "expected_chunks": ["Masked", "Next Sentence"],
+    "source": "bert.pdf"
+  },
+  {
+    "question": "What datasets were used to pre-train BERT?",
+    "expected_chunks": ["BooksCorpus", "Wikipedia"],
+    "source": "bert.pdf"
+  },
+  {
+    "question": "How does BERT handle fine-tuning for downstream tasks?",
+    "expected_chunks": ["fine-tuning", "pre-trained"],
+    "source": "bert.pdf"
+  },
+  {
+    "question": "What is retrieval-augmented generation?",
+    "expected_chunks": ["retrieval", "generation", "parametric"],
+    "source": "rag_paper.pdf"
+  },
+  {
+    "question": "What retriever does the RAG model use?",
+    "expected_chunks": ["DPR", "Dense Passage Retrieval"],
+    "source": "rag_paper.pdf"
+  },
+  {
+    "question": "What is the difference between RAG-sequence and RAG-token?",
+    "expected_chunks": ["RAG-Sequence", "RAG-Token"],
+    "source": "rag_paper.pdf"
+  },
+  {
+    "question": "What knowledge-intensive tasks does RAG improve?",
+    "expected_chunks": ["open-domain", "question answering"],
+    "source": "rag_paper.pdf"
+  },
+  {
+    "question": "What is the role of the feed-forward layer in the Transformer?",
+    "expected_chunks": ["feed-forward", "position-wise"],
+    "source": "attention_is_all_you_need.pdf"
+  },
+  {
+    "question": "What is dropout and how was it used in BERT?",
+    "expected_chunks": ["dropout"],
+    "source": "bert.pdf"
+  },
+  {
+    "question": "What is the BLEU score of the Transformer on WMT 2014 English-to-German?",
+    "expected_chunks": ["28.4", "BLEU"],
+    "source": "attention_is_all_you_need.pdf"
+  }
+]
